@@ -1,12 +1,11 @@
 # struct ContextDataset{T <: Number}
-# 	# contextRatings::ContextRating{T}
+# 	contextRatings::ContextRating{T}
 #     # ratings::SparseMatrixCSC{AbstractRating{T}, Int}
 #     preference::Persa.Preference{T}
 # 	metaContext::Dict()
 #     users::Int
 #     items::Int
 # end
-
 
 DatasetContext(df::DataFrame) = DatasetContext(df, maximum(df[:user]), maximum(df[:item]))
 
