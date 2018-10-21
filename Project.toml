@@ -1,8 +1,9 @@
 name = "ContextCF"
 uuid = "516dfeb4-d54b-11e8-3a5e-919bb2033509"
 author = ["Paulo Xavier <contato.pauloxavier@gmail.com>"]
-version = "0.0.1"
+version = "0.0.2"
 
 [deps]
 DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Persa = "86800b63-3017-5277-aca5-15d7d6a5f2b2"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
