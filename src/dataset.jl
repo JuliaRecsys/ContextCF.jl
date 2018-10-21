@@ -1,29 +1,52 @@
 const defdir = joinpath(dirname(@__FILE__), "..", "datasets")
+using DataFrames
 
-function Frappe()::Persa.Dataset
-	dataFile = "$(defdir)/frappe/frappe.csv"
-	metaFile = "$(defdir)/frappe/meta.csv"
+struct ContextDataset{T <: Number}
+	contextRatings::ContextRating{T}
+    ratings::SparseMatrixCSC{AbstractRating{T}, Int}
+    preference::Persa.Preference{T}
+	metaContext::Dict()
+    users::Int
+    items::Int
+end
 
-	if !isfile(dataFile) && !isfile(metaFile)
-		throw(ArgumentError("Dataset not found, get it on https://github.com/irecsys/CARSKit/blob/master/context-aware_data_sets/Mobile_Frappe.zip"))
+
+DatasetContext(df::DataFrame) = DatasetContext(df, maximum(df[:user]), maximum(df[:item]))
+
+
+function DatasetContext(df::DataFrame, users::Int, items::Int):: Persa.Dataset
+    @assert in(:user, names(df))
+    @assert in(:item, names(df))
+    @assert in(:rating, names(df))
+
+	contextSet = Dict();
+
+	for (colname,col) in eachcol(df)
+		if colname != :user && colname != :item && colname != :rating
+			push!(contextSet,colname => col)
+		end
 	end
 
-	data = CSV.read(dataFile, delim = '\t',
-	                      header = [:user, :item, :cnt, :daytime, :weekday, :isweekend, :homework, :cost, :weather, :country, :city],
-	                      allowmissing = :none)
-	meta= CSV.read(metaFile, delim = '\t',
-					header= [:item,:package, :category,:downloads,:developer,:icon,:language,:description, :name, :price, :rating, :short_desc],
-						  allowmissing= :none)
+	##print(users,items)
+	prepareContext(contextSet)
 
-	final = join(data,meta, on = :item)
+    if users < maximum(df[:user]) || items < maximum(df[:item])
+        throw(ArgumentError("users or items must satisfy maximum[df[:k]] >= k"))
+    end
 
-	deleterows!(final,1)
+    preference = Persa.Preference(df[:rating])
 
-	final[:user] = parse.(Int,final[:user])
-	final[:item] = parse.(Int,final[:item])
-	#final[:rating] = parse.(Int,final[:rating])
+    ratings = Persa.convert(df[:rating], preference)
 
-	##print(findfirst( x -> x[11] == "unknown", final))
+	## ratings = convert(prepareContext(contextSet),preference)
 
-	return DatasetContext(final)
+    matriz = Persa.sparse(df[:user], df[:item], ratings, users, items)
+
+    return Persa.Dataset(matriz, preference, users, items)
+
+	# return DatasetContext(matriz,preference,users,items,contextData)
+end
+
+function prepareContext(df::Dict)
+	print(keys(df))
 end
