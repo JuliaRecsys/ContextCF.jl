@@ -1,7 +1,7 @@
 name = "ContextCF"
 uuid = "516dfeb4-d54b-11e8-3a5e-919bb2033509"
-version = "0.0.1"
 author = ["Paulo Xavier <contato.pauloxavier@gmail.com>"]
+version = "0.0.1"
 
 [deps]
 Persa = "86800b63-3017-5277-aca5-15d7d6a5f2b2"

@@ -1,6 +1,3 @@
-const defdir = joinpath(dirname(@__FILE__), "..", "datasets")
-using DataFrames
-
 struct ContextDataset{T <: Number}
 	contextRatings::ContextRating{T}
     ratings::SparseMatrixCSC{AbstractRating{T}, Int}
