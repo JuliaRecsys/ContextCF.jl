@@ -1,12 +1,10 @@
 module ContextCF
 using Persa
 using DataFrames
+using SparseArrays
 
+include("rating.jl")
 include("dataset.jl")
 
-print("a")
-function greet()
-    print("hello")
-end
 
 end # module
