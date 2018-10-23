@@ -1,38 +1,36 @@
-struct DatasetContext{T <: Number}
-	contextRatings::ContextRating{T}
+struct DatasetContext{T <: Number} <: Persa.AbstractDataset{T}
+	ratings::SparseMatrixCSC{ContextRating{T}, Int}
     preference::Persa.Preference{T}
     users::Int
     items::Int
-	metaContext::Dict
+	metaContext::Dict{Symbol,DataType}
 end
 
-## recebe o dataframe junto das variaveis de contexto
-DatasetContext(df::DataFrame, metaContextData::Dict) = DatasetContext(df, maximum(df[:user]), maximum(df[:item]),metaContextData)
 
-function DatasetContext(df::DataFrame, users::Int, items::Int, metaContextData::Dict):: DatasetContext
-    @assert in(:user, names(df))
-    @assert in(:item, names(df))
-    @assert in(:rating, names(df))
+DatasetContext(df::DataFrame, metaContextData::Dict) = DatasetContext(df, Persa.Dataset(df), metaContextData)
 
-	contextSet = Dict();
+function DatasetContext(df::DataFrame, dataset::Persa.Dataset, metaContextData::Dict):: DatasetContext
+	@assert in(:user, names(df))
+	@assert in(:item, names(df))
+	@assert in(:rating, names(df))
 
-	for (colname,col) in eachcol(df)
-		if colname != :user && colname != :item && colname != :rating
-			push!(contextSet,colname => col)
-		end
+	if dataset.users < maximum(df[:user]) || dataset.items < maximum(df[:item])
+		throw(ArgumentError("users or items must satisfy maximum[df[:k]] >= k"))
 	end
 
-    if users < maximum(df[:user]) || items < maximum(df[:item])
-        throw(ArgumentError("users or items must satisfy maximum[df[:k]] >= k"))
-    end
+	preference = Persa.Preference(df[:rating])
 
-    preference = Persa.Preference(df[:rating])
+	ratings = Vector{Union{Missing,ContextRating}}(missing,size(df)[1])
 
-	ratings = Persa.convert(df[:rating], preference)
+	for i=1:length(ratings)
+	    context = Dict{Symbol,Any}()
+		foreach(key -> push!(context, key => df[key][i]), keys(metaContextData))
+	    ratings[i] = ContextRating(df[:rating][i],preference,context)
+	end
 
-    matriz = Persa.sparse(df[:user], df[:item], ratings, users, items)
+	ratings = [v for v in ratings]
 
-	contextRatings = ContextRating(matriz)
+	matriz = sparse(df[:user], df[:item], ratings, dataset.users, dataset.items)
 
-	return DatasetContext(contextRatings,preference,users,items,metaContextData)
+	return DatasetContext(matriz, dataset.preference, dataset.users, dataset.items, metaContextData)
 end

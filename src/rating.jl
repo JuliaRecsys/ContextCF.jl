@@ -1,11 +1,5 @@
 struct ContextRating{T <: Number} <: Persa.AbstractRating{T}
-	ratings::SparseMatrixCSC{Persa.AbstractRating{T}, Int}
-	# contextSet::Set
-	# contextItem::ContextItem
+    value::T
+	context::Dict{Symbol,Any}
+    ContextRating(x::T, preference::Persa.Preference{T}, context::Dict{Symbol,Any}) where T <: Number = new{T}(Persa.correct(x, preference), context)
 end
-
-#
-# struct ContextItem <: Persa.Rating
-#  	preference::Persa.Preference
-#     contextVariables::Dict{String, Any}
-# end
