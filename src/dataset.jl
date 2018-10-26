@@ -9,6 +9,8 @@ end
 
 DatasetContext(df::DataFrame, metaContextData::Dict) = DatasetContext(df, Persa.Dataset(df), metaContextData)
 
+context(dataset::DatasetContext) = keys(dataset.metaContext)
+
 function DatasetContext(df::DataFrame, dataset::Persa.Dataset, metaContextData::Dict):: DatasetContext
 	@assert in(:user, names(df))
 	@assert in(:item, names(df))
