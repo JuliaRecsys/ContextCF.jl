@@ -36,3 +36,19 @@ function DatasetContext(df::DataFrame, dataset::Persa.Dataset, metaContextData::
 
 	return DatasetContext(matriz, dataset.preference, dataset.users, dataset.items, metaContextData)
 end
+
+function Base.getindex(dataset::DatasetContext, user::Int, item::Int, contextColumn::Int)
+	if contextColumn > length(dataset.metaContext)
+		throw(ArgumentError("Essa coluna contexto não existe."))
+	end
+
+	collect(values(dataset.ratings[user,item].context))[contextColumn];
+end
+
+function Base.getindex(dataset::DatasetContext, user::Int, item::Int, contextColumn::Symbol)
+	if !haskey(dataset.metaContext,contextColumn)
+		throw(ArgumentError("Essa coluna contexto não existe."))
+	end
+
+	dataset.ratings[user,item].context[contextColumn]
+end
