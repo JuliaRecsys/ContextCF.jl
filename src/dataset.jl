@@ -9,6 +9,16 @@ end
 
 DatasetContext(df::DataFrame, metaContextData::Dict) = DatasetContext(df, Persa.Dataset(df), metaContextData)
 
+function DatasetContext(df::DataFrame, contextColumn::Vararg{Symbol})
+	metaContextData = Dict{Symbol,DataType}()
+	for context in contextColumn
+		@assert in(context, names(df)) "A coluna $context não existe no Dataset."
+		push!(metaContextData, context => eltype(df[context]))
+	end
+
+	DatasetContext(df,metaContextData)
+end
+
 function DatasetContext(df::DataFrame, dataset::Persa.Dataset, metaContextData::Dict):: DatasetContext
 	@assert in(:user, names(df))
 	@assert in(:item, names(df))
