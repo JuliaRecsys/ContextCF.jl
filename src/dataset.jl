@@ -9,8 +9,6 @@ end
 
 DatasetContext(df::DataFrame, metaContextData::Dict) = DatasetContext(df, Persa.Dataset(df), metaContextData)
 
-context(dataset::DatasetContext) = keys(dataset.metaContext)
-
 function DatasetContext(df::DataFrame, dataset::Persa.Dataset, metaContextData::Dict):: DatasetContext
 	@assert in(:user, names(df))
 	@assert in(:item, names(df))
@@ -52,3 +50,7 @@ function Base.getindex(dataset::DatasetContext, user::Int, item::Int, contextCol
 
 	dataset.ratings[user,item].context[contextColumn]
 end
+
+context(dataset::DatasetContext) = keys(dataset.metaContext)
+
+Base.size(dataset::DatasetContext) = (Persa.users(dataset), Persa.items(dataset), length(context(dataset)))

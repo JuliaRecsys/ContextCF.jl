@@ -191,9 +191,9 @@ version = "0.4.0"
 
 [[Tables]]
 deps = ["Pkg", "Requires", "Test"]
-git-tree-sha1 = "7b7e95a34c2c2504f1403aa9005399e239f461b9"
+git-tree-sha1 = "be3a3a28a1e6c4fdd838bdf21e796f7a592c565c"
 uuid = "bd369af6-aec1-5ad0-b16a-f7cc5008161c"
-version = "0.1.9"
+version = "0.1.10"
 
 [[Test]]
 deps = ["Distributed", "InteractiveUtils", "Logging", "Random"]
