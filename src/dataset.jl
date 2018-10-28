@@ -12,7 +12,7 @@ DatasetContext(df::DataFrame, metaContextData::Dict) = DatasetContext(df, Persa.
 function DatasetContext(df::DataFrame, contextColumn::Vararg{Symbol})
 	metaContextData = Dict{Symbol,DataType}()
 	for context in contextColumn
-		@assert in(context, names(df)) "A coluna $context não existe no Dataset."
+		@assert in(context, names(df)) "The column $context doesn't exist on the Dataset."
 		push!(metaContextData, context => eltype(df[context]))
 	end
 
@@ -47,7 +47,7 @@ end
 
 function Base.getindex(dataset::DatasetContext, user::Int, item::Int, contextColumn::Int)
 	if contextColumn > length(dataset.metaContext)
-		throw(ArgumentError("Essa coluna contexto não existe."))
+		throw(ArgumentError("This context column doesn't exist."))
 	end
 
 	collect(values(dataset.ratings[user,item].context))[contextColumn];
@@ -55,7 +55,7 @@ end
 
 function Base.getindex(dataset::DatasetContext, user::Int, item::Int, contextColumn::Symbol)
 	if !haskey(dataset.metaContext,contextColumn)
-		throw(ArgumentError("Essa coluna contexto não existe."))
+		throw(ArgumentError("This context column doesn't exist."))
 	end
 
 	dataset.ratings[user,item].context[contextColumn]
