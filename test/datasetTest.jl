@@ -12,14 +12,46 @@
 
     @testset "Index Tests" begin
         @testset "Cartesian Index Tests" begin
+            for i = 1:size(df)[1]
+                user = df[:user][i]
+                item = df[:item][i]
+                contextRating = df[:isWeekend][i]
+                for context in ContextCF.context(dataset)
+                    @test df[context][i] == dataset[user,item,context]
+                end
+            end
+        end
+        @testset " Column Index Tests" begin
 
-        for i = 1:size(df)[1]
-            user = df[:user][i]
-            item = df[:item][i]
-            contextRating = df[:isWeekend][i]
-            @test contextRating == dataset[user,item,:isWeekend]
+            ## por usuário
+            for u in 1:Persa.users(dataset)
+                for (user,item,rating) in dataset[user,:]
+                    @test ContextCF.value(dataset[user,item]) == ContextCF.value(rating)
+                end
+            end
+
+            ## por item
+            ##Pendente determinar como vai ser o objeto contextRating missing,
+            # for item in 1:Persa.items(dataset)
+            #     for (user, rating) in dataset1[:, item]
+            #         @test dataset[user, item] == value(rating)
+            #     end
+            # end
         end
 
+        @testset "Iterator Tests" begin
+            ## Testa se o valor dos ratings das iterações está correto
+            for (user, item, rating) in dataset
+                for context in ContextCF.context(dataset)
+                    @test dataset[user,item,context] == ContextCF.value(rating,context)
+                end
+            end
+
+            ## Testa se todos os itens possuem o Meta dado igual
+            for (user, item, rating) in dataset
+                @test ContextCF.context(dataset) == ContextCF.context(rating)
+            end
+        end
     end
     end
 end

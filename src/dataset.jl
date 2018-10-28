@@ -62,5 +62,13 @@ function Base.getindex(dataset::DatasetContext, user::Int, item::Int, contextCol
 end
 
 context(dataset::DatasetContext) = keys(dataset.metaContext)
+context(rating::ContextRating) = keys(rating.context)
 
 Base.size(dataset::DatasetContext) = (Persa.users(dataset), Persa.items(dataset), length(context(dataset)))
+
+# TODO: Reescrever função
+# function Base.getindex(dataset::Persa.AbstractDataset, c::Colon, item::Int)
+#     elements = collect(dataset.ratings[:, item])
+# 	println(elements)
+#     return [Persa.UserPreference(idx, item, elements[idx]) for idx in findall(!isnan, elements)]
+# end
