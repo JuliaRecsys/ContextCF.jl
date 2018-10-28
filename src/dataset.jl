@@ -10,12 +10,11 @@ end
 function DatasetContext(df::DataFrame)
 	context = Dict{Symbol,DataType}()
 
-	for (colname) in eachcol(df)
+	for (colname, _) in eachcol(df)
 		if colname != :user && colname != :item && colname != :rating
 			push!(context, colname => eltype(df[colname]))
 		end
 	end
-	
 	DatasetContext(df,context)
 end
 
