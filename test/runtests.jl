@@ -26,10 +26,5 @@ function createDummyContextDataset2()
 	return df
 end
 
-metaContext = Dict(:isWeekend => Bool, :dayWeek => Int, :isHappy => Bool)
-dataset = ContextCF.DatasetContext(createDummyContextDataset2(),metaContext)
-
-dataset[1,1,3]
-
 ####
 include("datasetTest.jl")
