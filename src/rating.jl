@@ -4,9 +4,8 @@ struct ContextRating{T <: Number} <: Persa.AbstractRating{T}
     ContextRating(x::T, preference::Persa.Preference{T}, context::Dict{Symbol,Any}) where T <: Number = new{T}(Persa.correct(x, preference), context)
 end
 
-Base.isnan(rating::ContextRating{T}) where T <: Number = false
-Base.isnan(rating::Persa.MissingRating{T}) where T <: Number = true
-
+Persa.Base.isnan(rating::ContextRating{T}) where T <: Number = false
+Persa.Base.isnan(rating::Persa.MissingRating{T}) where T <: Number = true
 Base.zero(::Type{ContextRating{T}}) where T <: Number = Persa.MissingRating{T}()
 
 value(rating::ContextRating) = rating.value

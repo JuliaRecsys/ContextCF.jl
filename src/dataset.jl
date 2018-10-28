@@ -7,7 +7,31 @@ struct DatasetContext{T <: Number} <: Persa.AbstractDataset{T}
 end
 
 
+function DatasetContext(df::DataFrame)
+	context = Dict{Symbol,DataType}()
+
+	for (colname) in eachcol(df)
+		if colname != :user && colname != :item && colname != :rating
+			push!(context, colname => eltype(df[colname]))
+		end
+	end
+	
+	DatasetContext(df,context)
+end
+
 DatasetContext(df::DataFrame, metaContextData::Dict) = DatasetContext(df, Persa.Dataset(df), metaContextData)
+
+Base.string(x::DatasetContext) = string("""Context Aware Collaborative Filtering Dataset
+                                    - # users: $(Persa.users(x))
+                                    - # items: $(Persa.items(x))
+                                    - # ratings: $(Persa.length(x))
+									- # contexts: $(length(context(x)))
+									- # contextColumns: $([string(key) for key in collect(ContextCF.context(x))])
+									- Ratings Preference: $(x.preference)
+                                    """)
+
+Base.print(io::IO, x::DatasetContext) = print(io, string(x))
+Base.show(io::IO, x::DatasetContext) = print(io, x)
 
 function DatasetContext(df::DataFrame, contextColumn::Vararg{Symbol})
 	metaContextData = Dict{Symbol,DataType}()
