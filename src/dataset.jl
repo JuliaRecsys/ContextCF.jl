@@ -20,14 +20,16 @@ end
 
 DatasetContext(df::DataFrame, metaContextData::Dict) = DatasetContext(df, Persa.Dataset(df), metaContextData)
 
-Base.string(x::DatasetContext) = string("""Context Aware Collaborative Filtering Dataset
-                                    - # users: $(Persa.users(x))
-                                    - # items: $(Persa.items(x))
-                                    - # ratings: $(Persa.length(x))
+Base.string(x::DatasetContext) = string("""
+									Context Aware Collaborative Filtering Dataset
+									- # users: $(Persa.users(x))
+									- # items: $(Persa.items(x))
+									- # ratings: $(Persa.length(x))
 									- # contexts: $(length(context(x)))
 									- # contextColumns: $([string(key) for key in collect(ContextCF.context(x))])
-									- Ratings Preference: $(x.preference)
-                                    """)
+
+									Ratings Preference: $(x.preference)
+									""")
 
 Base.print(io::IO, x::DatasetContext) = print(io, string(x))
 Base.show(io::IO, x::DatasetContext) = print(io, x)
