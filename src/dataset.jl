@@ -3,12 +3,11 @@ struct DatasetContext{T <: Number} <: Persa.AbstractDataset{T}
     preference::Persa.Preference{T}
     users::Int
     items::Int
-	metaContext::Dict{Symbol,DataType}
+metaContext::Dict{Symbol,Type}
 end
 
-
 function DatasetContext(df::DataFrame)
-	context = Dict{Symbol,DataType}()
+	context = Dict{Symbol,Type}()
 
 	for (colname, _) in eachcol(df)
 		if colname != :user && colname != :item && colname != :rating
@@ -21,7 +20,7 @@ end
 DatasetContext(df::DataFrame, metaContextData::Dict) = DatasetContext(df, Persa.Dataset(df), metaContextData)
 
 function DatasetContext(df::DataFrame, contextColumn::Vararg{Symbol})
-	metaContextData = Dict{Symbol,DataType}()
+	metaContextData = Dict{Symbol,Type}()
 	for context in contextColumn
 		@assert in(context, names(df)) "The column $context doesn't exist on the Dataset."
 		push!(metaContextData, context => eltype(df[context]))
