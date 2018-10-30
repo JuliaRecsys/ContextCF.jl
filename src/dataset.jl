@@ -1,5 +1,5 @@
 struct DatasetContext{T <: Number} <: Persa.AbstractDataset{T}
-	ratings::SparseMatrixCSC{ContextRating{T}, Int}
+	ratings::SparseMatrixCSC{Persa.AbstractRating{T}, Int}
     preference::Persa.Preference{T}
     users::Int
     items::Int
@@ -67,7 +67,7 @@ function DatasetContext(df::DataFrame, dataset::Persa.Dataset, metaContextData::
 
 	matriz = sparse(df[:user], df[:item], ratings, dataset.users, dataset.items)
 
-	return DatasetContext(matriz, dataset.preference, dataset.users, dataset.items, metaContextData)
+	return DatasetContext{eltype(df[:rating])}(matriz, dataset.preference, dataset.users, dataset.items, metaContextData)
 end
 
 function Base.getindex(dataset::DatasetContext, user::Int, item::Int, contextColumn::Int)
