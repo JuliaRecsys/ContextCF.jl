@@ -20,20 +20,6 @@ end
 
 DatasetContext(df::DataFrame, metaContextData::Dict) = DatasetContext(df, Persa.Dataset(df), metaContextData)
 
-Base.string(x::DatasetContext) = string("""
-									Context Aware Collaborative Filtering Dataset
-									- # users: $(Persa.users(x))
-									- # items: $(Persa.items(x))
-									- # ratings: $(Persa.length(x))
-									- # contexts: $(length(context(x)))
-									- # contextColumns: $([string(key) for key in collect(ContextCF.context(x))])
-
-									Ratings Preference: $(x.preference)
-									""")
-
-Base.print(io::IO, x::DatasetContext) = print(io, string(x))
-Base.show(io::IO, x::DatasetContext) = print(io, x)
-
 function DatasetContext(df::DataFrame, contextColumn::Vararg{Symbol})
 	metaContextData = Dict{Symbol,DataType}()
 	for context in contextColumn
@@ -91,9 +77,16 @@ context(rating::ContextRating) = keys(rating.context)
 
 Base.size(dataset::DatasetContext) = (Persa.users(dataset), Persa.items(dataset), length(context(dataset)))
 
-# TODO: Reescrever função
-# function Base.getindex(dataset::Persa.AbstractDataset, c::Colon, item::Int)
-#     elements = collect(dataset.ratings[:, item])
-# 	println(elements)
-#     return [Persa.UserPreference(idx, item, elements[idx]) for idx in findall(!isnan, elements)]
-# end
+Base.string(x::DatasetContext) = string("""
+									Context Aware Collaborative Filtering Dataset
+									- # users: $(Persa.users(x))
+									- # items: $(Persa.items(x))
+									- # ratings: $(Persa.length(x))
+									- # contexts: $(length(context(x)))
+									- # contextColumns: $([string(key) for key in collect(ContextCF.context(x))])
+
+									Ratings Preference: $(x.preference)
+									""")
+
+Base.print(io::IO, x::DatasetContext) = print(io, string(x))
+Base.show(io::IO, x::DatasetContext) = print(io, x)
