@@ -3,7 +3,7 @@ struct DatasetContext{T <: Number} <: Persa.AbstractDataset{T}
     preference::Persa.Preference{T}
     users::Int
     items::Int
-metaContext::Dict{Symbol,Type}
+	metaContext::Dict{Symbol,Type}
 end
 
 function DatasetContext(df::DataFrame)
@@ -59,7 +59,7 @@ function Base.getindex(dataset::DatasetContext, user::Int, item::Int, contextCol
 	if contextColumn > length(dataset.metaContext)
 		throw(ArgumentError("This context column doesn't exist."))
 	end
-
+##TODO: refatorar e remover collect se necessário
 	collect(values(dataset.ratings[user,item].context))[contextColumn];
 end
 
@@ -72,6 +72,7 @@ function Base.getindex(dataset::DatasetContext, user::Int, item::Int, contextCol
 end
 
 context(dataset::DatasetContext) = keys(dataset.metaContext)
+
 context(rating::ContextRating) = keys(rating.context)
 
 Base.size(dataset::DatasetContext) = (Persa.users(dataset), Persa.items(dataset), length(context(dataset)))

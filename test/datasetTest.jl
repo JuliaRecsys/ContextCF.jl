@@ -29,6 +29,13 @@
                 end
             end
 
+            # TODO
+            # for (u,v,r) in dataset
+            # 	for c in context(dataset)
+            # 		dataset[u,v,c] == r[c]
+            # 	end
+            # end
+
             ## por item
             ##Pendente determinar como vai ser o objeto contextRating missing,
             # for item in 1:Persa.items(dataset)
