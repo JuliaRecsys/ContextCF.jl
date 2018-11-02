@@ -38,7 +38,7 @@ function DatasetContext(df::DataFrame, dataset::Persa.Dataset, metaContextData::
 		throw(ArgumentError("users or items must satisfy maximum[df[:k]] >= k"))
 	end
 
-	preference = Persa.Preference(df[:rating])
+	preference = Persa.Preference(collect(df[:rating]))
 
 	ratings = Vector{Union{Missing,ContextRating}}(missing,size(df)[1])
 
