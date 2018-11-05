@@ -21,16 +21,48 @@ Base.zero(::Type{ContextRating{T}}) where T <: Number = Persa.MissingRating{T}()
 
 value(::Missing) = missing
 
+"""
+    context(rating::ContextRating)
+Return the names of context column in the rating as Dict keys.
+
+# Example:
+
+julia> ContextCF.context(rating)
+Base.KeySet for a Dict{Symbol,Any} with 2 entries. Keys:
+  :isWeekend
+  :isRaining
+
+"""
+context(rating::ContextRating) = keys(rating.context)
+
 
 """
     value(rating::ContextRating)
 Return the value of the rating.
+
+# Example:
+
+julia> ContextCF.value(rating)
+
+2
 """
 value(rating::ContextRating) = rating.value
 
 """
     value(rating::ContextRating,contextColumn::Symbol)
 Return the value of context in the contextColumn.
+
+# Example:
+
+julia> ContextCF.value(rating, :isWeekend)
+
+true
+
+
+julia> ContextCF.value(rating, :isWeekend)
+
+missing
+
 """
 function value(rating::ContextRating,contextColumn::Symbol)
 	@assert haskey(rating.context,contextColumn) "The column $contextColumn doesn't exist on the Rating."

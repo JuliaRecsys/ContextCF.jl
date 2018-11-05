@@ -7,9 +7,21 @@ struct DatasetContext{T <: Number} <: Persa.AbstractDataset{T}
 end
 
 """
-    DatasetContext(df::DataFrame)::ContextCF.DatasetContext
+    DatasetContext(df::DataFrame)::DatasetContext
 
 Returns a ContextDataset using the columns :user,:rating and :item, and the others as context columns, infering her Types.
+
+# Example:
+
+julia> DatasetContext(df)
+Context Aware Collaborative Filtering Dataset
+- users: 7
+- items: 6
+- ratings: 35
+- contexts: 2
+- contextColumns: ["isWeekend", "isRaining"]
+
+Ratings Preference: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 """
 function DatasetContext(df::DataFrame)
 	context = Dict{Symbol,Type}()
@@ -23,17 +35,43 @@ function DatasetContext(df::DataFrame)
 end
 
 """
-    DatasetContext(df::DataFrame,metaContextData::Dict{Symbol,Type})::ContextCF.DatasetContext
+    DatasetContext(df::DataFrame, metaContextData::Dict{Symbol,Type})::DatasetContext
 
 Returns a ContextDataset using the columns :user,:rating and :item from a dataframe, passing explicitly the context columns and her Types.
+
+# Example:
+
+julia> DatasetContext(df, Dict( :isWeekend => Bool, :isRaining => Bool ))
+Context Aware Collaborative Filtering Dataset
+- users: 7
+- items: 6
+- ratings: 35
+- contexts: 2
+- contextColumns: ["isWeekend", "isRaining"]
+
+Ratings Preference: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
 """
 DatasetContext(df::DataFrame, metaContextData::Dict) = DatasetContext(df, Persa.Dataset(df), metaContextData)
 
 
 """
-    DatasetContext(df::DataFrame,contextColumn::Vararg{Symbol})::ContextCF.DatasetContext
+    DatasetContext(df::DataFrame,contextColumn::Vararg{Symbol})::DatasetContext
 
 Returns a ContextDataset using the columns :user,:rating and :item from a dataframe, passing explicitly the contextColumns and letting julia infer her types.
+
+# Example:
+
+julia> DatasetContext(df, :isWeekend, :isRaining)
+Context Aware Collaborative Filtering Dataset
+- users: 7
+- items: 6
+- ratings: 35
+- contexts: 2
+- contextColumns: ["isWeekend", "isRaining"]
+
+Ratings Preference: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+
 """
 function DatasetContext(df::DataFrame, contextColumn::Vararg{Symbol})
 	metaContextData = Dict{Symbol,Type}()
@@ -91,29 +129,39 @@ end
 """
     context(dataset::DatasetContext)
 Return the names of context column in the dataset as Dict keys.
+
+# Example:
+
+julia> context(df)
+Base.KeySet for a Dict{Symbol,Type} with 2 entries. Keys:
+  :isWeekend
+  :isRaining
+
 """
 context(dataset::DatasetContext) = keys(dataset.metaContext)
 
 """
-    context(rating::ContextRating)
-Return the names of context column in the rating as Dict keys.
-"""
-context(rating::ContextRating) = keys(rating.context)
-
-
-"""
-    size(dataset::DatasetContext)
+    size(dataset::DatasetContext)::(Int64, Int64, Int64)
 Return the number of users, itens and context columns in the dataset.
+
+# Example:
+
+julia> size(df)
+(7, 6, 2)
+
+julia> size(anotherDf)
+(943, 1682, 1)
+
 """
 Base.size(dataset::DatasetContext) = (Persa.users(dataset), Persa.items(dataset), length(context(dataset)))
 
 Base.string(x::DatasetContext) = string("""
 									Context Aware Collaborative Filtering Dataset
-									- # users: $(Persa.users(x))
-									- # items: $(Persa.items(x))
-									- # ratings: $(Persa.length(x))
-									- # contexts: $(length(context(x)))
-									- # contextColumns: $([string(key) for key in collect(ContextCF.context(x))])
+									- users: $(Persa.users(x))
+									- items: $(Persa.items(x))
+									- ratings: $(Persa.length(x))
+									- contexts: $(length(context(x)))
+									- contextColumns: $([string(key) for key in collect(ContextCF.context(x))])
 
 									Ratings Preference: $(x.preference)
 									""")
