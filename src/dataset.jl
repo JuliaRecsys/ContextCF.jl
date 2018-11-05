@@ -9,7 +9,7 @@ end
 """
     DatasetContext(df::DataFrame)::DatasetContext
 
-Returns a ContextDataset using the columns :user,:rating and :item, and the others as context columns, infering her Types.
+Returns a ContextDataset using the columns :user,:rating and :item, and the others as context columns, infering the DataTypes.
 
 # Example:
 
@@ -37,7 +37,7 @@ end
 """
     DatasetContext(df::DataFrame, metaContextData::Dict{Symbol,Type})::DatasetContext
 
-Returns a ContextDataset using the columns :user,:rating and :item from a dataframe, passing explicitly the context columns and her Types.
+Returns a ContextDataset using the columns :user,:rating and :item from a dataframe, passing explicitly the context columns and the DataTypes.
 
 # Example:
 
@@ -58,7 +58,7 @@ DatasetContext(df::DataFrame, metaContextData::Dict) = DatasetContext(df, Persa.
 """
     DatasetContext(df::DataFrame,contextColumn::Vararg{Symbol})::DatasetContext
 
-Returns a ContextDataset using the columns :user,:rating and :item from a dataframe, passing explicitly the contextColumns and letting julia infer her types.
+Returns a ContextDataset using the columns :user,:rating and :item from a dataframe, passing explicitly the contextColumns and letting julia infer the DataTypes.
 
 # Example:
 
