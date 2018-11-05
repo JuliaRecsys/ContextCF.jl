@@ -6,6 +6,11 @@ struct DatasetContext{T <: Number} <: Persa.AbstractDataset{T}
 	metaContext::Dict{Symbol,Type}
 end
 
+"""
+    DatasetContext(df::DataFrame)::ContextCF.DatasetContext
+
+Returns a ContextDataset using the columns :user,:rating and :item, and the others as context columns, infering her Types.
+"""
 function DatasetContext(df::DataFrame)
 	context = Dict{Symbol,Type}()
 
@@ -17,8 +22,19 @@ function DatasetContext(df::DataFrame)
 	DatasetContext(df,context)
 end
 
+"""
+    DatasetContext(df::DataFrame,metaContextData::Dict{Symbol,Type})::ContextCF.DatasetContext
+
+Returns a ContextDataset using the columns :user,:rating and :item from a dataframe, passing explicitly the context columns and her Types.
+"""
 DatasetContext(df::DataFrame, metaContextData::Dict) = DatasetContext(df, Persa.Dataset(df), metaContextData)
 
+
+"""
+    DatasetContext(df::DataFrame,contextColumn::Vararg{Symbol})::ContextCF.DatasetContext
+
+Returns a ContextDataset using the columns :user,:rating and :item from a dataframe, passing explicitly the contextColumns and letting julia infer her types.
+"""
 function DatasetContext(df::DataFrame, contextColumn::Vararg{Symbol})
 	metaContextData = Dict{Symbol,Type}()
 	for context in contextColumn
@@ -55,6 +71,7 @@ function DatasetContext(df::DataFrame, dataset::Persa.Dataset, metaContextData::
 	return DatasetContext{eltype(df[:rating])}(matriz, dataset.preference, dataset.users, dataset.items, metaContextData)
 end
 
+
 function Base.getindex(dataset::DatasetContext, user::Int, item::Int, contextColumn::Int)
 	if contextColumn > length(dataset.metaContext)
 		throw(ArgumentError("This context column doesn't exist."))
@@ -71,10 +88,23 @@ function Base.getindex(dataset::DatasetContext, user::Int, item::Int, contextCol
 	dataset.ratings[user,item].context[contextColumn]
 end
 
+"""
+    context(dataset::DatasetContext)
+Return the names of context column in the dataset as Dict keys.
+"""
 context(dataset::DatasetContext) = keys(dataset.metaContext)
 
+"""
+    context(rating::ContextRating)
+Return the names of context column in the rating as Dict keys.
+"""
 context(rating::ContextRating) = keys(rating.context)
 
+
+"""
+    size(dataset::DatasetContext)
+Return the number of users, itens and context columns in the dataset.
+"""
 Base.size(dataset::DatasetContext) = (Persa.users(dataset), Persa.items(dataset), length(context(dataset)))
 
 Base.string(x::DatasetContext) = string("""

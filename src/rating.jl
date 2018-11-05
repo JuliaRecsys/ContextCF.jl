@@ -20,8 +20,18 @@ Base.isnan(rating::ContextRating{T}) where T <: Number = false
 Base.zero(::Type{ContextRating{T}}) where T <: Number = Persa.MissingRating{T}()
 
 value(::Missing) = missing
+
+
+"""
+    value(rating::ContextRating)
+Return the value of the rating.
+"""
 value(rating::ContextRating) = rating.value
 
+"""
+    value(rating::ContextRating,contextColumn::Symbol)
+Return the value of context in the contextColumn.
+"""
 function value(rating::ContextRating,contextColumn::Symbol)
 	@assert haskey(rating.context,contextColumn) "The column $contextColumn doesn't exist on the Rating."
 	rating.context[contextColumn]
