@@ -64,10 +64,7 @@ julia> ContextCF.value(rating, :isWeekend)
 missing
 
 """
-function value(rating::ContextRating,contextColumn::Symbol)
-	@assert haskey(rating.context,contextColumn) "The column $contextColumn doesn't exist on the Rating."
-	rating.context[contextColumn]
-end
+p
 
 function Base.getindex(rating::ContextRating,contextColumn::Symbol)
 	@assert haskey(rating.context,contextColumn) "The column $contextColumn doesn't exist on the Rating."

@@ -110,12 +110,8 @@ function DatasetContext(df::DataFrame, dataset::Persa.Dataset, metaContextData::
 end
 
 
-function Base.getindex(dataset::DatasetContext, user::Int, item::Int, contextColumn::Int)
-	if contextColumn > length(dataset.metaContext)
-		throw(ArgumentError("This context column doesn't exist."))
-	end
-##TODO: refatorar e remover collect se necessário
-	collect(values(dataset.ratings[user,item].context))[contextColumn];
+function Base.getindex(dataset::DatasetContext, user::Int, item::Int, ::Colon)
+	dataset.ratings[user,item].context
 end
 
 function Base.getindex(dataset::DatasetContext, user::Int, item::Int, contextColumn::Symbol)
@@ -129,6 +125,7 @@ end
 """
     context(dataset::DatasetContext)
 Return the names of context column in the dataset as Dict keys.
+
 
 # Example:
 
