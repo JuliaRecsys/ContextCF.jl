@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/JuliaRecsys/ContextCF.jl.svg?branch=master)](https://travis-ci.org/JuliaRecsys/ContextCF.jl)
+
 # ContextCF.jl - Context Collaborative Filtering expansion for package Persa.jl(https://github.com/JuliaRecsys/Persa.jl)
 
 **Installation**: at the Julia REPL, `Pkg.add("ContextCF")` or in Pkg3 `add ContextCF`
