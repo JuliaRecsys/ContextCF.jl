@@ -8,7 +8,9 @@ makedocs(
     authors = "Paulo Xavier, Filipe Braida and contributors.",
     # analytics = "UA-128580038-1",
     pages    = Any[
-        "Introduction"   => "index.md"
+        "Introduction"   => "index.md",
+        "Dataset" => "man/dataset.md"
+        "Rating" => "man/rating.md"
     ]
 )
 
